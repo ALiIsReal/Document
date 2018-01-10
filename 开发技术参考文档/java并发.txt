@@ -1,0 +1,20 @@
+线程池：ExecutorService
+一、java通过Executors提供四种线程池，分别为：
+	newCacheThreadPool创建一个可缓存的线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。
+	newFixedThreadPool创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。
+	newShceduledThreadPool创建一个定长线程池，支持定时及周期性任务执行。
+	newSingleThreadPool创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序（FIFO，LIFO，优先级）执行。
+二、ExecutorService的submit()和execute()区别
+	1、接受的参数不一样，
+		submit()可以接受runnable无返回值和callbale有返回值
+		execute()接受runnable无返回值
+	2、submit()有返回值，而execute没有
+		Method submit extends base method Executor.execute by creating and returning a Future that can be used to cancel execution and/or wait for completion.
+		用到返回值的例子，比如说我有很多个做validation的task，
+	3、submit方便Exception处理
+三、shutdown()shutdownNow() 区别
+	可以关闭ExecutorService，这将导致其拒绝新任务。提供两个方法来关闭ExecutorService。
+	shutdown() 方法在终止前允许执行以前提交的任务，
+	shutdownNow() 方法阻止等待任务启动并试图停止当前正在执行的任务。在终止时执行程序没有任务在执行，也没有任务在等待执行，并且无法提交新任务。关闭未使用的ExecutorService以允许回收其资源。一般分两个阶段关闭ExecutorService。第一阶段调用shutdown()拒绝传入任务，然后调用shutdownNow(如有必要)取消所有遗留的任务。
+四、Runnable()和Callable()的区别
+	如果是一个多线程协作程序，比如菲波拉切数列，1，1，2，3，5，8…使用多线程来计算。但后者需要前者的结果，就需要用callable接口了。callable用法和runnable一样，只不过调用的是call方法，该方法有一个泛型返回值类型，你可以任意指定。
