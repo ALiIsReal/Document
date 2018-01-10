@@ -1,0 +1,234 @@
+spring配置的可选方案
+	1. 在XML中进行显示配置
+	2. 在JAVA中进行显示配置
+	3. 隐式的bean发现机制和自动装配
+spring从两个角度来实现自动化装配
+	1. 组件扫描（component scanning）：Spring会自动发现应用上下文中所创建的bean。
+	2. 自动装配（autowiring）：Spring自动满足bean之间的依赖。
+
+	
+注解开发常用的注解：--自动创建的bean的id命名一般是首字母小写
+	@Component：表明该类会作为组件类。
+	@ComponentScan：在Spring中启动组件扫描。默认扫描与配置类相同的包，也就是当前包及其子包。
+		@ComponentScan("abc")：指明包的名称
+		@ComponentScan(basePackages="abc")：更加清晰的表明报包的名称
+		@ComponentScan(basePackages={"abc"，"abc2"})：设置多个基础包
+		@ComponentScan(basePackageClasses={abc.class，abc2.class})：指定包含中的类或接口的包
+	@ContextConfiguration(classes= ): 需要在 中加载配置
+	@RunWith(classes: )： 运行在 类中
+	@AutoWired：自动装配 可以用java依赖注入规范@Inject替换
+		@AutoWired(required=false)：没有匹配的bean时不会抛出异常
+	@Rule：指定规则
+	@Configuration：表明这个类是一个配置类
+	@Bean：返回一个对象注册为Spring应用上下文中的bean
+		@Bean(name="abc")：指定bean的名称为abc
+	@Import(object.class)：导入object类
+	@ImportResource("classpath:filename.xml")：引用根路径下filename.xml文件
+	@Profile：指定某个bean属于哪一个profile
+		@Profile("dev")：应用在类级别上，只有在dev profile激活时才会创建，没有的话会被忽略 Spring 3.1版本
+						在Spring3.2开始 可以作用于方法级别上
+	@Conditional：注解定义条件化bean （Spring 4版本）
+		设置了@Conditional的类可以是任意实现了Condition接口的类型。提供matches()方法返回true就创建。
+	@Qualifier：限定符
+		@Qualifier("class")：指向的是组件扫描时所创建的bean，并且这个bean是Class类的实例
+		可以为bean设置自己的限定符，而不是依赖于将bean ID作为限定符。需要在bean声明上添加@Qualifier注解 例如@Qualifier("class")
+	@Scope：设置作用域
+		@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)：声明为原型的bean 也可以为@Scope("prototype") 但是使用常量更加安全并且不易出错。
+		@Scope(Value=WebApplicationContext.SCOPE_SESSION,proxyMode=ScopedProxyMode.INTERFACES)：指定会话作用域
+			如果要代理的类是接口的话可以直接使用INTERFACES如果是具体的类就要设置为TARGET_CLASS以表明要以生成目标类扩展的方式创建代理
+	@PropertySource("classpath:/com/system/app.properties")：声明属性源 和Environment并用
+	@Aspect：声明是一个切面
+		@After：通知方法会在目标方法返回或抛出异常后调用
+		@AfterReturning：通知方法会在目标方法返回后调用
+		@AfterThrowing：通知方法会在目标方法抛出异常后调用
+		@Around：通知方法会将目标方法封装起来
+		@Before：通知方法会在目标方法调用之前执行
+		@Pointcut("execution(** *.*(..)")：定义命名的切点
+	@EnableAspectJAutoProxy：启用AspectJ自动代理
+	@DeclareParents：注解由三部分组成
+		value属性指定了哪种类型的bean要引入该接口
+		defaultImpl属性指定了为引入功能提供实现的类
+		@DeclareParents注解所标注的静态属性指明了要引入了接口
+	@EnableWebSecurity：启用Web安全性
+	
+	
+XML开发常用配置：
+	<context:component-scan base-package=""> //启用组件扫描
+	<bean id="123" class="abc" /> //创建一个bean，并将名字设置为123，设置名字方便引用注入到另外一个bean中
+	xml中声明DI的两种基本配置方案：
+		<constructor-arg>元素
+			1、	<bean id="a" class="b">
+					<constructor-arg ref="c" />
+				</bean>
+			2、	<bean id="a" class="b">
+					<constructor-arg value="c" />
+				</bean>
+			3、	<bean id="a" class="b">
+					<list>
+						<ref bean="1">
+						<ref bean="2">
+						<ref bean="3">
+					</list>
+				</bean>
+			4、	<bean id="a" class="b">
+					<set>
+						<value>1</value>
+						<value>2</value>
+						<value>3</value>
+					</set>
+				</bean>
+		使用Spring3.0所引入的c-命名空间
+			必须在xml顶部声明其模式
+			1、	<bean id="a" class="b" c:c-ref="c" />
+									c-ref中c为构造器参数名 _0可以替换掉名字为第一个构造器
+			2、	<bean id="a" class="b" c:_value="c"> 或者
+				<bean id="a" class="b" c:_0="c">
+	bean标签属性：
+		scope：设置作用域
+	<beans profile="dev">
+		<bean id="dataSource" 
+			class="org.apache.commons.dbcp.BasicDataSource"
+			destroy-method="close"
+			p:url=""
+			p:driverClassName=""
+			p:username=""
+			p:password=""
+			p:initialSize=""
+			p:maxActive=""
+		/>
+	</beans>
+		运行时根据激活状态来决定是哪个profile被创建
+	激活profile需要依赖两个独立的属性：spring.profiles.actice和spring.profiles.default。如果设置了active属性的话，那么他的值来决定哪个profile激活，如果没有设置active，将会查找default值，如果均没有设置的话那就没有激活的profile，因此只会创建那些没有定义在profile中的bean
+		有多种方式来设置这两个值：
+			作为DispatcherServlet的初始化参数
+			作为Web应用的上下文参数
+			作为JNDI条目
+			作为环境变量
+			作为JVM的系统属性
+			在集成测试类上，使用@ActiveProfiles注解设置
+	在Web应用的web.xml文件中设置默认的profile
+		为上下文设置默认的profile
+			<context-param>
+				<param-name>spring.profiles.default</param-name>
+				<param-value>dev</param-value>
+			</context-param>
+		为Servlet设置默认的profile
+			<servlet>
+				<servlet-name>appServlet</servlet-name>
+				<servlet-class>org.springframework.web.servlet.DisoatcherServlet</servlet-class>
+				<init-param>
+					<param-name>spring.profiles.default</param-name>
+					<param-value>dev</param-value>	
+				</init-param>
+				<load-on-startup>1</load-on-startup>
+			</servlet>
+	在xml中声明作用域代理
+		<bean 	id="class"
+				class="class"
+				scope="session">
+			<aop:scoped-proxy proxy-target-class="false" >
+		</bean>  等同于@Scope(Value=WebApplicationContext.SCOPE_SESSION,proxyMode=ScopedProxyMode.INTERFACES)
+			默认情况下，它会使用CGLib创建目标类的代理。但是我们也可以将proxy-target-class属性设置为false，进而要求它生成基于接口的代理
+		
+		
+	<aop:aspectj-autoproxy>		启用AspectJ自动代理
+	ps：xml配置不能从编译期的类型检查中受益，存在配置不合法风险。所以JavaConfig要优于xml配置
+JUint规则：
+	StandardOutputStreamLog：获得system.out.pringln输出
+	
+JavaConfig配置类：
+	
+	
+Spring3.1中引入了bean profile的功能：
+	
+	
+通过CondittionContext，可以做到如下几点：--@ConditionContext
+	借助getRegistry()返回的BeanDefinitionRegistry检查bean定义。
+	借助getBeanFactory()返回的ConfigurableListtableBeanFactory检查bean的存在，甚至探查bean的属性。
+	借助getEnvironment()返回Environment检查环境变量是否存在以及对应的值是什么。
+	读取并探查getResourceLoader()返回的ResourceLoader所加载的资源。
+	借助getClassLoader()返回的ClassLoader加载并检查类是否存在。
+	
+自动装配发生歧义的时候的解决办法
+	将可选的bean中的某一个设置为首选(primary)的bean --@Primary
+	使用限定符(qualifier)来帮助spring将可选的bean的范围缩小到只有一个 --@Qualifier
+	
+Spring定义了多种作用域，可以基于这些作用域创建bean，包括：
+	单例(Singleton)：在整个应用中，只创建bean的一个实例。
+	原型(Prototype)：每次注入或者通过Spring应用上下文获取的时候，都会创建一个新的bean的实例。
+	会话(Session)：在Web应用中，为每个会话创建一个bean实例。
+	请求(Requset)：在Web应用中，为每个请求创建一个bean实例。
+	
+Spring表达式语言(Spring Expression Language)：
+
+Spring中运行时求值的方式：
+	属性占位符(Property placeholder)
+	Spring表达式语言(SpEL)
+	
+SpEL拥有的特性：
+	使用bean的ID来引用bean
+	调用方法和访问对象的属性
+	对值进行算术、关系和逻辑运算
+	正则表达式匹配
+	集合操作
+	
+Spring提供了四种类型的AOP支持：
+	基于代理的经典Spring AOP
+	纯POJO切面
+	@AspectJ注解驱动的切面
+	注入式AspecJ切面(适用于Spring各版本)
+	
+Spring中AOP配置元素能够以非侵入性的方式声明切面
+	AOP配置元素					用途
+	<aop:advisor>			定义AOP通知器
+	<aop:after>				定义AOP后置通知(不管被通知的方法是否执行成功)
+	<aop:after-returning>	定义AOP返回通知
+	<aop:after-throwing>	定义AOP异常通知
+	<aop:around>			定义AOP环绕通知
+	<aop:aspect>			定义一个切面
+	<aop:aspecectJ-autoproxy>启用@AcpectJ注解驱动的切面
+	<aop:before>			定义一个AOP前置通知
+	<aop:config>			顶层的AOP配置元素，大多数的<aop:*>元素必须包含在<aop:config>元素内
+	<aop:declare-parents>	以透明的方式为被通知的对象引入额外的接口
+	<aop:pointcut>			定义一个切点
+	
+Spring Security 的11个模块
+	ACL				支持通过访问控制列表(access control list,ACL)为域对象提供安全性
+	切面(Aspect)	一个很小的模块，当使用Spring Security注解时，会使用基于AcpectJ的切面，而不是使用标准的SpringAOP
+	CAS客户端		提供与Jasig的中心认证服务(Central Authentication Service,CAS)进行集成功能
+	配置(Configuration)	包含通过XML和Java配置Spring Security的功能支持
+	核心(Core)		提供Spring Security基本库
+	加密(Cryptography)	提供了加密和密码编码的功能
+	LDAP			支持基于LDAP进行认证
+	OpenID			支持使用OpenID进行集中认证
+	Remoting		提供了对Spring Remoting的支持
+	标签库(Tag Library)	Spring Security的JSP标签库
+	Web				提供了Spring Security基于Filter的Web安全性支持
+	
+Spring Security配置用户详细信息的方法
+	方法								描述
+	accountExpired(boolean)				定义账号是否已经过期
+	accountLocked(boolean)				定义账号是否已经锁定
+	and()								用来连接配置
+	authorities(GrantAuthority...)		授予某个用户一项或多项权限
+	authorities(List<? extends GrantAuthority>)	授予某个用户一项或多项权限
+	authorities(String)					授予某个用户一项或多项权限
+	credentialsExpired(boolean)			定义凭证是否已经过期
+	disabled(boolean)					定义账号是否已经被禁用
+	password(String)					定义用户密码
+	roles(Srting...)					授予某个用户一个或多个角色
+	
+Spring Security定义保护路径的配置方法
+	方法								描述
+	access(String)						如果给定的SpEL表达式计算结果为true，就允许访问
+	anonymous()							允许匿名访问
+	authenticated()						允许认证过的用户访问
+	denyAll()							无条件拒绝所有访问
+	fullAuthenticated()					如果用户是完整认证的话(不是通过Remember-me功能认证)，就允许访问
+	hasAnyAuthority(String...)			如果用户具备给定权限中的某一个的话，就允许访问
+	hasAnyRole(String)					如果用户具备给定权限的话就允许访问
+	hasIpAddress(String)				如果请求来自给定的ip地址的话，就允许访问
+	hasRole(String)						如果用户具备给定角色的话就允许访问
+	not()								对其他访问结果取反
+	permitAll()							无条件允许访问
+	remeberMe()							如果用户是通过Remeber-me功能认证的，就允许访问
