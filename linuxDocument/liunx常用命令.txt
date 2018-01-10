@@ -1,0 +1,13 @@
+perl命令：
+	-a 				autosplit mode with -n or -p (splits $_ into @F)
+					自动分割模式 配合-n或-p选项 (将数据分割成名为 @F 的数组)
+	-C				enables the listed Unicode features
+					启用列出的Unicode功能
+	-c 				check syntax only (runs BEGIN and CHECK blocks)
+					只检查语法（运行开始和检查块）
+	-i[extension]	edit <> files in place (makes backup if extension supplied)	
+					编辑适当的文件（如果提供扩展，则进行备份）
+	-p				assume loop like -n but print line also,like sed
+					假设循环为n，但打印行也类似于SED
+	-e program		one line of program (Several -e's allowed,omit programfile)
+					指定字符串以作为脚本（多个字符串迭加）执行
