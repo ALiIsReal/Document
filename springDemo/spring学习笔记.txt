@@ -232,3 +232,16 @@ Spring Security定义保护路径的配置方法
 	not()								对其他访问结果取反
 	permitAll()							无条件允许访问
 	remeberMe()							如果用户是通过Remeber-me功能认证的，就允许访问
+	
+Spring提供的四个注解声明缓存规则
+	@Cacheable  表明Spring在调用方法之前，首先应该在缓存中查找方法的返回值。如果这个值能够找到，就会返回缓存值。否则的话，这个方法就会被调用，返回值会放到缓存之中
+	@CachePut	表明Spring应该将方法的返回值放到缓存中。在方法的调用前并不会检查缓存，方法始终会被调用
+	@CacheEvict	表明Spring应该在缓存中清除一个或多个条目
+	@Caching	这是一个分组的注解，能够同时应用多个其他的缓存注解
+Spring的cache命名空间提供了以XML方式配置缓存规则的元素
+	<cache:annotation-driver>	启用注解驱动的缓存。等同于java配置中的@EnableCaching
+	<cache:advice>				定义缓存通知(advice)。结合<aop:advisor>,将通知应用到切点上
+	<cache:caching>				在缓存通知中，定义一组特定的缓存规则
+	<cache:cacheable>			指明某个方法要进行缓存。等同于@Cacheable
+	<cache:cache-put>			指明某种方法要填充缓存，但不会考虑缓存中是否已有匹配的值。等同于@CachePut
+	<cache:cache-evict>			指明某个方法要从缓存中移除一个或多个条目，等同于@CacheEvict注解
