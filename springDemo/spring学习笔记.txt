@@ -245,3 +245,9 @@ Spring的cache命名空间提供了以XML方式配置缓存规则的元素
 	<cache:cacheable>			指明某个方法要进行缓存。等同于@Cacheable
 	<cache:cache-put>			指明某种方法要填充缓存，但不会考虑缓存中是否已有匹配的值。等同于@CachePut
 	<cache:cache-evict>			指明某个方法要从缓存中移除一个或多个条目，等同于@CacheEvict注解
+
+Spring Security3.0 提供了4个新的注解，可以使用SpEL表达式来保护方法调用
+	@PreAuthorize		在方法调用之前，基于表达式的计算结果来限制对方法的访问
+	@PostAuthorize		允许方法调用，但是如果表达式计算结果为false，将抛出一个安全性异常
+	@PostFilter			允许方法调用，但必须按照表达式来过滤方法的结果
+	@PreFilter			允许方法调用，但必须在进入方法之前过滤输入值
