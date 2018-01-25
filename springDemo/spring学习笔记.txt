@@ -262,3 +262,8 @@ REST是什么
 	表述性(Representational):REST资源实际上可以利用各种形式来进行表述，包括XML、JSON(JavaScript Object Notation)甚至HTML--最适合资源使用者的任意形式
 	状态(State):当使用REST的时候，我们更关注资源的状态而不是对资源采取行为
 	转移(Transfer):REST涉及到转移资源数据，它以某种表述性形式从一个应用转移到另一个应用
+四种标准的AMQP Exchange：
+	Direct：如果消息的routing key与binding的routing key直接匹配的话，消息将会路由到该队列上
+	Topic：如果将消息的routing key与binding的routing key符合通配符匹配的话，消息将会路由到该队列上
+	Headers：如果消息参数表中的头信息和值都与binding参数表中相匹配，消息将会路由到该队列上
+	Fanout：不管消息的routing key和参数表的头信息/值是什么，消息将会路由到所有队列上
