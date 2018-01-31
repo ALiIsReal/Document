@@ -50,6 +50,64 @@ lsofÃüÁî£ºÓÃÓÚ²é¿´Äã½ø³Ì´ò¿ªµÄÎÄ¼þ£¬´ò¿ªÎÄ¼þµÄ½ø³Ì£¬½ø³Ì´ò¿ªµÄ¶Ë¿Ú(TCP¡¢UDP),ÕÒ»
 	-g:ÁÐ³öGIDºÅ½ø³ÌµÄÏêÇé
 	-d<ÎÄ¼þºÅ>:ÁÐ³öÕ¼ÓÃ¸ÃÎÄ¼þºÅµÄ½ø³Ì
 	
+scriptfifoÃüÁî£º
+
+
+
+
+
+
+
+trÃüÁî£ºÖ»¶ÔÊäÈëÁ÷ÆðÐ§ ×ª»»
+	-d:Ö¸¶¨ÐèÒª±»É¾³ýµÄ×Ö·û¼¯ºÏ
+	-c:ÉèÖÃÒ»¸ö¼¯ºÏ£¬Óë-dÁ¬ÓÃ´ïµ½Ö»±£Áô×Ö·û¼¯ºÏÖÐµÄ×Ö·û
+	-s:Ñ¹ËõÊäÈëÖÐµÄÖØ¸´×Ö·û
+	×Ö·ûÀà£º[:upper:]
+		alnum:×ÖÄ¸ºÍÊý×Ö
+		alpha:×ÖÄ¸
+		cntrl:¿ØÖÆ(·Ç´òÓ¡)×Ö·û
+		digit:Êý×Ö
+		graph:Í¼ÐÎ×Ö·û
+		lower:Ð¡Ð´×ÖÄ¸
+		print:¿É´òÓ¡×Ö·û
+		punct:±êµã·ûºÅ
+		space:¿Õ°××Ö·û
+		upper:´óÐ´×ÖÄ¸
+		xdigit:Ê®Áù½øÖÆ×Ö·û
+		
+uniqÃüÁî£ºÏû³ýÖØ¸´ÄÚÈÝ Ö»ÄÜÓÃÓÚÅÅ¹ýÐòµÄÊý¾ÝÊäÈë
+	-u:Ö»ÏÔÊ¾Î¨Ò»µÄÐÐ
+	-c:Í³¼Æ¸÷ÐÐ³öÏÖµÄ´ÎÊý
+	-d:Ö»ÏÔÊ¾ÖØ¸´ÐÐ
+	-z:Éú³É°üº¬0Öµ×Ö½ÚÖÕÖ¹·ûµÄÊä³ö
+
+findÃüÁî£º
+	-atime:·ÃÎÊÊ±¼ä(Ìì)
+	-mtime:ÐÞ¸ÄÊ±¼ä(Ìì)
+	-ctime:±ä»¯Ê±¼ä(Ìì)
+	-amin:·ÃÎÊÊ±¼ä(·ÖÖÓ)
+	-mmin:ÐÞ¸ÄÊ±¼ä(·ÖÖÓ)
+	-cmin:±ä»¯Ê±¼ä(·ÖÖÓ)
+	-perm:»ùÓÚÎÄ¼þÈ¨ÏÞºÍËùÓÐÈ¨Æ¥Åä
+	-mindepth:»ùÓÚÄ¿Â¼×îÐ¡Éî¶È½øÐÐËÑË÷
+	-maxdepth:»ùÓÚÄ¿Â¼×î´óÉî¶È½øÐÐËÑË÷
+	-exec:ÓëÆäËûÃüÁî½øÐÐ½áºÏ(-exec cat {} \; ---> {}´úÌæÆ¥Åäµ½µÄÃ¿Ò»Ïî)
+	-prune:ºöÂÔ
+	
+ÎÄ¼þÀàÐÍ¶ÔÓ¦±í
+	ÎÄ¼þÀàÐÍ				ÀàÐÍ²ÎÊý
+	ÆÕÍ¨ÎÄ¼þ				f
+	·ûºÅÁ´½Ó				l
+	Ä¿Â¼					d
+	×Ö·ûÉè±¸				c
+	¿éÉè±¸					b
+	Ì×½Ó×Ö					s
+	Fifo					p
+	
+tput sc ´æ´¢¹â±êÎ»ÖÃ
+tput rc »Ö¸´¹â±êÎ»ÖÃ
+tput ed Çå³ý´Óµ±Ç°¹â±êÎ»ÖÃµ½ÐÐÎ²Ö®¼äµÄËùÓÐÄÚÈÝ
+	
 PS:
 	Èç¹ûÓÃ»§´ò¿ªÄ³¸ö´óÎÄ¼þ²»×ö²Ù×÷µÄ»°£¬¼´Ê¹¸ÃÎÄ¼þ±»É¾³ý×ÊÔ´Ò²²»»á±»ÊÍ·Å	Àý×Ó tail -f CDS.log
 	

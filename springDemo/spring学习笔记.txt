@@ -267,3 +267,14 @@ REST是什么
 	Topic：如果将消息的routing key与binding的routing key符合通配符匹配的话，消息将会路由到该队列上
 	Headers：如果消息参数表中的头信息和值都与binding参数表中相匹配，消息将会路由到该队列上
 	Fanout：不管消息的routing key和参数表的头信息/值是什么，消息将会路由到所有队列上
+	
+JMX规范定义了如下四种类型的MBean：
+	标准MBean：标准MBean的管理接口是通过在固定的接口上执行反射确定的，bean类会实现这个接口
+	动态MBean：动态MBean的管理接口是运行时通过调用DynamicMBean接口的方法来确定。因为管理接口不是通过静态接口定义的，因此可以在运行时改变。
+	开放MBean：开放MBean是一种特殊的动态MBean，其属性和方法只限定于原始类型、原始类型的包装类以及可以分解为原始类型或原始类型包装类的任意类型
+	模型MBean：模型MBean也是一种特殊的动态MBean，用于充当管理接口与受管资源中介。模型MBean并不像它们所声明的那样来编写。它们通常通过工厂生成，工厂会使用元信息来组装管理接口
+	
+Spring Boot的四个主要特性：
+	Spring Boot Starter：它将常用的依赖分组进行了整合，将其合并到一个依赖中，这样就可以一次性添加到项目的Maven或Gradle构建中	自动配置：Spring Boot的自动配置特性利用了Spring 4 对条件化配置的支持，合理地推测应用所需的bean并自动化配置它们
+	命令行接口(Command-line interface,CLI)：Spring Boot的CLI发挥了Groovy编程语言的优势，并结合自动配置进一步简化Spring应用的开发
+	Actuator：它为Spring Boot应用添加了一定的管理性
